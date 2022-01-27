@@ -34,4 +34,5 @@ until [  $COUNT -lt 0 ]; do
 EOF
 done
 
-cat output.json | jq -s -c 'sort_by(.rtt) | .[]' | head -n 20 | sponge ${PATH_TO_TESTED} 
+# sort peers by RTT
+cat ${PATH_TO_TESTED | jq -s -c 'sort_by(.rtt) | .[]' | sponge ${PATH_TO_TESTED} 
