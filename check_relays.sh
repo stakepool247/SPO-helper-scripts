@@ -4,8 +4,10 @@ clear
 BASE_PATH=$(pwd)
 PATH_TO_TOPOLOGY="${BASE_PATH}/topology.json"
 PATH_TO_TESTED="${BASE_PATH}/output.json"
-CNCLI_CLI="/Users/lauris/.local/bin/cncli"
+CNCLI_CLI="$(which cncli)"
+NWMAGIC=764824073
 OUTPUT_PEER_COUNT=20
+TEST_COUNT=0  # for testing purposes. Set to 0 to read all records
 
 if [ -f "$PATH_TO_TESTED" ]; then
     echo "$PATH_TO_TESTED exists, removing it."
@@ -19,12 +21,14 @@ wget -q -O ${PATH_TO_TOPOLOGY} https://explorer.mainnet.cardano.org/relays/topol
 COUNT=$(cat $PATH_TO_TOPOLOGY | jq -r '.Producers | .[] | .addr' | wc -l)
 
 # for testing purposes limit entries
-COUNT=5
+if [ "$TEST_COUNT" -gt 0 ]; then 
+        COUNT=$TEST_COUNT 
+fi
 
-let NWMAGIC=764824073
 let COUNT-=1
 
-echo "Total Peers in the file: ${COUNT}"
+
+echo "Total Peers in the file: $(( $COUNT + 1 ))"
 
 # checking the rtt
 until [  $COUNT -lt 0 ]; do
@@ -44,21 +48,24 @@ until [  $COUNT -lt 0 ]; do
 
         echo "Peer $COUNT: nodeIP: ${nodeIP} nodePORT: ${nodePORT} nodeRTT: ${nodeRTT}"
         let COUNT-=1
-        
-        # check if last line 
-        if [ $COUNT -lt 0 ]; 
-                then end_of_record=" " 
-        fi
 
         cat <<EOF >> ${PATH_TO_TESTED}
-        {"address" : "${nodeIP}", "port": ${nodePORT}, "rtt": ${nodeRTT}${end_of_record}}
+        {"address" : "${nodeIP}", "port": ${nodePORT}, "rtt": ${nodeRTT}}
 EOF
 done
 
-# sort peers by RTT
-cat ${PATH_TO_TESTED} | jq -s -c 'sort_by(.rtt) | .[]' | sponge ${PATH_TO_TESTED} 
 
-clear
-# printing out 20 best peers
-echo "Sorted best ${OUTPUT_PEER_COUNT} Peers based on RTT:"
-head -n ${OUTPUT_PEER_COUNT} ${PATH_TO_TESTED} | jq
+# remove duplicates
+cat ${PATH_TO_TESTED} | jq -s 'unique_by(.address)' | sponge ${PATH_TO_TESTED} 
+
+# sort peers by RTT
+cat ${PATH_TO_TESTED} |  jq  'sort_by(.rtt) '  | sponge ${PATH_TO_TESTED} 
+
+# clear
+# printing out best peers
+echo "Best ${OUTPUT_PEER_COUNT} Peers:"
+for ((i = 0 ; i <= $OUTPUT_PEER_COUNT ; i++)); do
+  cat ${PATH_TO_TESTED}| jq -cr .[$i]
+done
+
+
