@@ -32,7 +32,6 @@ echo "Total Peers in the file: $(( $COUNT + 1 ))"
 
 # checking the rtt
 until [  $COUNT -lt 0 ]; do
-        printf "Peer $COUNT: "
 
         nodeIP=$(cat $PATH_TO_TOPOLOGY | jq -r ".Producers | .[$COUNT] | .addr")
         nodePORT=$(cat $PATH_TO_TOPOLOGY | jq -r ".Producers | .[$COUNT] | .port")
