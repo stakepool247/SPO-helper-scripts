@@ -41,7 +41,7 @@ until [  $COUNT -lt 0 ]; do
         #echo "OUTPUT ${checkNODE}"
 
         if [[ $(jq -r .status <<< "${checkNODE}") = "ok" ]]; then
-                [[ ${CNCLI_CONNECT_ONLY} = true ]] && nodeRTT=$(jq -r .connectDurationMs <<< "${checkNODE}") || nodeRTT=$(jq -r .durationMs <<< "${checkNODE}")
+                nodeRTT=$(jq -r .connectDurationMs <<< "${checkNODE}") || nodeRTT=$(jq -r .durationMs <<< "${checkNODE}")
         else 
                 nodeRTT=999999
         fi
