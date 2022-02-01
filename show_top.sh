@@ -1,11 +1,8 @@
 #!/bin/bash    
-clear
-
+#clear
 BASE_PATH=$(pwd)
 PATH_TO_TESTED="${BASE_PATH}/output.json"
-
 OUTPUT_PEER_COUNT=20    #  default peer output count 
-
 output_address="addr"   # default output address name [p2p: address, non-p2p: addr]
 output_valency=true     # should valency be added at each line, required for non-p2p configuration
 output_p2p=false        # non-p2p output by default
@@ -33,7 +30,7 @@ while getopts 'phc:' opt; do
          output_address="address" 
          output_valency=false
          output_p2p=true 
-         echo "Printing output in p2p mode"   
+         # echo "Printing output in p2p mode"   
           ;;
 
       c)
