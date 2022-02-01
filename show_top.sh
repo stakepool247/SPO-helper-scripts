@@ -49,7 +49,7 @@ while getopts 'phc:' opt; do
 done
 
 # printing out best peers
-echo "Show best ${OUTPUT_PEER_COUNT} Peers from ${PATH_TO_TESTED}:"
+# echo "Show best ${OUTPUT_PEER_COUNT} Peers from ${PATH_TO_TESTED}:"
 
 json_output='{}' # creating epmty json object
 
@@ -73,5 +73,5 @@ for ((i = 0 ; i <= $(($OUTPUT_PEER_COUNT-1)) ; i++)); do
 
 done
 
-echo "output:"
+# echo "output:"
 echo ${json_output} | jq
