@@ -65,7 +65,7 @@ for ((i = 0 ; i <= $(($OUTPUT_PEER_COUNT-1)) ; i++)); do
     then
         json_output=$(jq ".accessPoints += [{\"address\": \"${address}\", \"port\": ${port}, \"rtt\": \"${rtt}\"}]" <<< "$json_output")
     else
-        json_output=$(jq ".producers += [{\"addr\": \"${address}\", \"port\": ${port}, \"rtt\": \"${rtt}\", \"valency\": 1}]" <<< "$json_output")
+        json_output=$(jq ".Producers += [{\"addr\": \"${address}\", \"port\": ${port}, \"rtt\": \"${rtt}\", \"valency\": 1}]" <<< "$json_output")
     fi
 
 done
