@@ -7,7 +7,7 @@ PATH_TO_TESTED="${BASE_PATH}/output.json"
 CNCLI_CLI="$(which cncli)"
 NWMAGIC=764824073
 OUTPUT_PEER_COUNT=20
-TEST_COUNT=5  # for testing purposes. Set to 0 to read all records
+TEST_COUNT=0 # for testing purposes. Set to 0 to read all records
 
 if [ -f "$PATH_TO_TESTED" ]; then
     echo "$PATH_TO_TESTED exists, removing it."
