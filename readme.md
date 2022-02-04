@@ -1,4 +1,10 @@
 ### check round-trip time (RTT) to known relays and sort them by better rtt
+
+Included scripts:
+check-relays.sh: ping public available relays and generate sorted output.json file with relays
+show-top.sh - generate topilogy file (show-top.sh -h for available options)
+
+
 ### Resources needed:
 - **cncli binary to check the ping** 
 Get the latest one from Andrew Westberg --> https://github.com/AndrewWestberg/cncli/tags)
