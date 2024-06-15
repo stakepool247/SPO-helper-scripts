@@ -20,17 +20,22 @@ Set-Location $cardano_files_folder
 # Downloading the latest release of cardano-wallet
 Write-Host "Downloading latest release of cardano-wallet..." -ForegroundColor yellow
 
+
+# get the latest release version from github api
+$cardano_wallet_latest_release_version = (Invoke-WebRequest -Uri 'https://api.github.com/repos/cardano-foundationcardano-wallet/releases/latest' -UseBasicParsing).Content | ConvertFrom-Json | Select-Object -ExpandProperty tag_name
+
+# print the latest release version
+Write-Host "Latest release version: $cardano_wallet_latest_release_version" -ForegroundColor Green
+
+# generate download URL for the latest release
+$download_url = "https://github.com/cardano-foundation/cardano-wallet/releases/download/"+ $cardano_wallet_latest_release_version + "/cardano-wallet.exe-" + $cardano_wallet_latest_release_version + "-win64.zip"
+
+# print the download URL
+Write-Host "Download URL: $download_url" -ForegroundColor Green
+
+
 try {
-    # get the latest release version from github api
-    $cardano_wallet_latest_release_version = (Invoke-WebRequest -Uri 'https://api.github.com/repos/input-output-hk/cardano-wallet/releases/latest' -UseBasicParsing).Content | ConvertFrom-Json | Select-Object -ExpandProperty tag_name
-
-    # print the latest release version
-    Write-Host "Latest release version: $cardano_wallet_latest_release_version" -ForegroundColor Green
-
-    # generate download URL for the latest release
-    $download_url = "https://github.com/input-output-hk/cardano-wallet/releases/download/"+ $cardano_wallet_latest_release_version + "/cardano-wallet-" + $cardano_wallet_latest_release_version + "-win64.zip"
-
-    $download_file = "cardano-wallet-" + $cardano_wallet_latest_release_version + "-win64.zip"
+    $download_file = "cardano-wallet-exe-" + $cardano_wallet_latest_release_version + "-win64.zip"
 
     # check if the file already exists. skip if exists
     if (Test-Path $download_file) {
