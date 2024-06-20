@@ -22,7 +22,7 @@ Write-Host "Downloading latest release of cardano-wallet..." -ForegroundColor ye
 
 
 # get the latest release version from github api
-$cardano_wallet_latest_release_version = (Invoke-WebRequest -Uri 'https://api.github.com/repos/cardano-foundationcardano-wallet/releases/latest' -UseBasicParsing).Content | ConvertFrom-Json | Select-Object -ExpandProperty tag_name
+$cardano_wallet_latest_release_version = (Invoke-WebRequest -Uri 'https://api.github.com/repos/cardano-foundation/cardano-wallet/releases/latest' -UseBasicParsing).Content | ConvertFrom-Json | Select-Object -ExpandProperty tag_name
 
 # print the latest release version
 Write-Host "Latest release version: $cardano_wallet_latest_release_version" -ForegroundColor Green
