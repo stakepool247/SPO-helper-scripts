@@ -4,22 +4,15 @@
 start_time=$(date +%s)
 
 # Default values
-DOWNLOAD_DIR="/home/cardano/cnode"
+DOWNLOAD_DIR=""
 NETWORK="mainnet"
-NODE_CHOICE=""
-NETWORK_CHOICE=""
 
 # Check if cardano-node process is running
 if pgrep -x "cardano-node" > /dev/null; then
-    if [[ -z "$NODE_CHOICE" ]]; then
-        NODE_CHOICE=${1:-""}
-    fi
-    if [[ -z "$NODE_CHOICE" ]]; then
-        echo "Warning: cardano-node process is running. It should be stopped before proceeding."
-        echo "1) Cancel process"
-        echo "2) Continue anyway"
-        read -p "Enter your choice (1/2): " NODE_CHOICE
-    fi
+    echo "Warning: cardano-node process is running. It should be stopped before proceeding."
+    echo "1) Cancel process"
+    echo "2) Continue anyway"
+    read -p "Enter your choice (1/2): " NODE_CHOICE
     case $NODE_CHOICE in
         1)
             echo "Operation cancelled by user."
@@ -35,21 +28,19 @@ if pgrep -x "cardano-node" > /dev/null; then
     esac
 fi
 
-# Ask for custom download directory (press Enter to use default)
-if [[ -z "$DOWNLOAD_DIR" ]]; then
-    read -p "Enter download directory [default: $DOWNLOAD_DIR]: " input_dir
-    DOWNLOAD_DIR="${input_dir:-$DOWNLOAD_DIR}"
-fi
+# Ask for custom download directory (force prompt)
+while [[ -z "$DOWNLOAD_DIR" ]]; do
+    read -p "Enter download directory [default: /home/cardano/cnode]: " input_dir
+    DOWNLOAD_DIR="${input_dir:-/home/cardano/cnode}"
+done
 
 # Prompt to select the Cardano network
-if [[ -z "$NETWORK_CHOICE" ]]; then
-    echo "Select the network:"
-    echo "1) Mainnet"
-    echo "2) Preprod"
-    echo "3) Preview"
-    echo "4) Sanchonet"
-    read -p "Enter the number corresponding to your choice: " NETWORK_CHOICE
-fi
+echo "Select the network:"
+echo "1) Mainnet"
+echo "2) Preprod"
+echo "3) Preview"
+echo "4) Sanchonet"
+read -p "Enter the number corresponding to your choice: " NETWORK_CHOICE
 
 # Set network variables based on choice
 case $NETWORK_CHOICE in
@@ -86,6 +77,9 @@ case $NETWORK_CHOICE in
         ;;
         
 esac
+
+# Create download directory if it doesn't exist
+mkdir -p "$DOWNLOAD_DIR"
 
 # Navigate to download directory
 cd "$DOWNLOAD_DIR" || exit
