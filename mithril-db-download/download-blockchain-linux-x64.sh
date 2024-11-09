@@ -6,14 +6,21 @@ start_time=$(date +%s)
 # Default values
 DOWNLOAD_DIR="/home/cardano/cnode"
 NETWORK="mainnet"
+NODE_CHOICE=""
+NETWORK_CHOICE=""
 
 # Check if cardano-node process is running
 if pgrep -x "cardano-node" > /dev/null; then
-    echo "Warning: cardano-node process is running. It should be stopped before proceeding."
-    echo "1) Cancel process"
-    echo "2) Continue anyway"
-    read -p "Enter your choice (1/2): " node_choice
-    case $node_choice in
+    if [[ -z "$NODE_CHOICE" ]]; then
+        NODE_CHOICE=${1:-""}
+    fi
+    if [[ -z "$NODE_CHOICE" ]]; then
+        echo "Warning: cardano-node process is running. It should be stopped before proceeding."
+        echo "1) Cancel process"
+        echo "2) Continue anyway"
+        read -p "Enter your choice (1/2): " NODE_CHOICE
+    fi
+    case $NODE_CHOICE in
         1)
             echo "Operation cancelled by user."
             exit 0
@@ -29,19 +36,23 @@ if pgrep -x "cardano-node" > /dev/null; then
 fi
 
 # Ask for custom download directory (press Enter to use default)
-read -p "Enter download directory [default: $DOWNLOAD_DIR]: " input_dir
-DOWNLOAD_DIR="${input_dir:-$DOWNLOAD_DIR}"
+if [[ -z "$DOWNLOAD_DIR" ]]; then
+    read -p "Enter download directory [default: $DOWNLOAD_DIR]: " input_dir
+    DOWNLOAD_DIR="${input_dir:-$DOWNLOAD_DIR}"
+fi
 
 # Prompt to select the Cardano network
-echo "Select the network:"
-echo "1) Mainnet"
-echo "2) Preprod"
-echo "3) Preview"
-echo "4) Sanchonet"
-read -p "Enter the number corresponding to your choice: " network_choice
+if [[ -z "$NETWORK_CHOICE" ]]; then
+    echo "Select the network:"
+    echo "1) Mainnet"
+    echo "2) Preprod"
+    echo "3) Preview"
+    echo "4) Sanchonet"
+    read -p "Enter the number corresponding to your choice: " NETWORK_CHOICE
+fi
 
 # Set network variables based on choice
-case $network_choice in
+case $NETWORK_CHOICE in
     1)
         MITHRIL_NETWORK="release-mainnet"
         CARDANO_NETWORK="mainnet"
